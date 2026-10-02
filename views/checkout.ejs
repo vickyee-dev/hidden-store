@@ -1,0 +1,41 @@
+<h1 style="margin-top:1.5rem">Checkout</h1>
+<% if (errors.length) { %><div class="errors" role="alert"><ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul></div><% } %>
+<form method="post" action="/checkout" class="two-col">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <div class="stack">
+    <section class="card">
+      <h2 style="margin-bottom:1rem">Delivery details</h2>
+      <div class="field"><label for="ship_name">Recipient name</label><input id="ship_name" name="ship_name" value="<%= form.ship_name %>" required maxlength="80"></div>
+      <div class="field"><label for="ship_phone">Phone <span class="hint">(for the delivery rider)</span></label><input id="ship_phone" name="ship_phone" value="<%= form.ship_phone %>" required inputmode="tel" placeholder="0712345678"></div>
+      <div class="field"><label for="ship_address">Delivery address</label><textarea id="ship_address" name="ship_address" rows="3" required maxlength="255" placeholder="Estate, street, town"><%= form.ship_address %></textarea></div>
+    </section>
+    <section class="card">
+      <h2 style="margin-bottom:1rem">Payment</h2>
+      <div class="stack">
+        <% Object.entries(methods).forEach(([k, label]) => { %>
+          <label class="pay-opt"><input type="radio" name="payment_method" value="<%= k %>" <%= form.payment_method === k ? 'checked' : '' %>><span><%= label %>
+            <span class="hint" style="display:block"><%= k === 'cod' ? 'Pay the rider in cash or M-Pesa when your shoes arrive.' : 'Send the total via M-Pesa, then enter the confirmation code below.' %></span></span></label>
+        <% }) %>
+        <div class="field" id="mpesa-field">
+          <label for="mpesa_code">M-Pesa confirmation code <span class="hint">(only if paying by M-Pesa)</span></label>
+          <input id="mpesa_code" name="mpesa_code" value="<%= form.mpesa_code %>" maxlength="10" placeholder="e.g. QGH7XXXXXX" style="text-transform:uppercase">
+          <% if (till) { %><p class="hint" style="margin-top:.3rem">Pay <strong><%= money(cart.total) %></strong> to Till <strong><%= till %></strong>.</p><% } %>
+        </div>
+      </div>
+    </section>
+  </div>
+  <aside class="card summary">
+    <h2>Your order</h2>
+    <% cart.items.forEach(({ product, qty, line }) => { %><div class="line"><span><%= qty %> × <%= product.title %></span><span><%= money(line) %></span></div><% }) %>
+    <div class="line total"><span>Total</span><span><%= money(cart.total) %></span></div>
+    <button class="btn-primary btn-block" type="submit">Place order</button>
+  </aside>
+</form>
+<script>
+  // Show the M-Pesa code box only when M-Pesa is selected.
+  (function () {
+    const f = document.getElementById('mpesa-field');
+    const sync = () => { f.hidden = document.querySelector('input[name=payment_method]:checked')?.value !== 'mpesa'; };
+    document.querySelectorAll('input[name=payment_method]').forEach(r => r.addEventListener('change', sync)); sync();
+  })();
+</script>

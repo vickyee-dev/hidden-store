@@ -1,0 +1,26 @@
+<div class="row spread" style="margin-top:1.5rem">
+  <div><h1>Order <%= order.invoice %></h1><p class="muted small">Placed <%= order.created_at %> UTC</p></div>
+  <div class="row"><span class="status <%= order.status %>"><%= order.status %></span><span class="status <%= order.payment_status %>"><%= order.payment_status %></span></div>
+</div>
+<div class="two-col">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th class="right">Subtotal</th></tr></thead>
+      <tbody>
+        <% items.forEach(i => { %><tr><td><%= i.title %></td><td><%= money(i.unit_price) %></td><td><%= i.quantity %></td><td class="right"><%= money(i.unit_price * i.quantity) %></td></tr><% }) %>
+        <tr><td colspan="3" class="right"><strong>Total</strong></td><td class="right"><strong><%= money(order.total) %></strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <aside class="card stack">
+    <div><h3>Delivery</h3><p><%= order.ship_name %><br><%= order.ship_phone %><br><%= order.ship_address %></p></div>
+    <div><h3>Payment</h3><p><%= methods[order.payment_method] %><% if (order.mpesa_code) { %> · code <strong><%= order.mpesa_code %></strong><% } %></p>
+      <% if (order.payment_method === 'mpesa' && order.payment_status === 'unpaid' && order.status !== 'cancelled') { %><p class="muted small">We’ll mark this paid once we verify your M-Pesa payment.<% if (till) { %> Till: <strong><%= till %></strong>.<% } %></p><% } %></div>
+    <% if (order.status === 'pending') { %>
+      <form method="post" action="/orders/<%= order.id %>/cancel" onsubmit="return confirm('Cancel this order?')">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn-danger btn-block">Cancel order</button>
+      </form>
+    <% } %>
+    <a href="/orders">← All orders</a>
+  </aside>
+</div>

@@ -1,0 +1,27 @@
+<div class="row spread" style="margin-bottom:1rem"><h1>Order <%= order.invoice %></h1><a href="/admin/orders">← All orders</a></div>
+<div class="two-col" style="grid-template-columns:1.4fr 1fr;margin-top:0">
+  <div class="table-wrap"><table>
+    <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th class="right">Subtotal</th></tr></thead>
+    <tbody>
+      <% items.forEach(i => { %><tr><td><%= i.title %></td><td><%= money(i.unit_price) %></td><td><%= i.quantity %></td><td class="right"><%= money(i.unit_price * i.quantity) %></td></tr><% }) %>
+      <tr><td colspan="3" class="right"><strong>Total</strong></td><td class="right"><strong><%= money(order.total) %></strong></td></tr>
+    </tbody>
+  </table></div>
+  <div class="stack">
+    <section class="card">
+      <h3>Customer</h3>
+      <p><%= order.username || '(deleted account)' %><% if (order.email) { %> · <%= order.email %><% } %><br><%= order.ship_name %> · <%= order.ship_phone %><br><%= order.ship_address %></p>
+      <p class="muted small" style="margin-top:.5rem">Placed <%= order.created_at %> UTC · <%= methods[order.payment_method] %><% if (order.mpesa_code) { %> · M-Pesa code <strong><%= order.mpesa_code %></strong><% } %></p>
+    </section>
+    <form class="card" method="post" action="/admin/orders/<%= order.id %>">
+      <h3 style="margin-bottom:.8rem">Update</h3>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="field"><label for="status">Order status</label>
+        <select id="status" name="status"><% statuses.forEach(s => { %><option value="<%= s %>" <%= order.status === s ? 'selected' : '' %>><%= s %></option><% }) %></select></div>
+      <div class="field"><label for="ps">Payment</label>
+        <select id="ps" name="payment_status"><option value="unpaid" <%= order.payment_status === 'unpaid' ? 'selected' : '' %>>unpaid</option><option value="paid" <%= order.payment_status === 'paid' ? 'selected' : '' %>>paid</option></select></div>
+      <p class="hint" style="margin-top:.5rem">Cancelling returns the items to stock.</p>
+      <button class="btn-primary" style="margin-top:.8rem">Save</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="row spread" style="margin-bottom:1rem">
+  <h1>Orders</h1>
+  <div class="chips"><a class="chip <%= !status ? 'active' : '' %>" href="/admin/orders">All</a>
+    <% statuses.forEach(s => { %><a class="chip <%= status === s ? 'active' : '' %>" href="/admin/orders?status=<%= s %>" style="text-transform:capitalize"><%= s %></a><% }) %></div>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>Payment</th></tr></thead>
+  <tbody>
+    <% if (!orders.length) { %><tr><td colspan="6" class="muted">No orders.</td></tr><% } %>
+    <% orders.forEach(o => { %><tr>
+      <td><a href="/admin/orders/<%= o.id %>"><%= o.invoice %></a></td><td><%= o.created_at.slice(0, 10) %></td><td><%= o.username || o.ship_name %></td><td><%= money(o.total) %></td>
+      <td><span class="status <%= o.status %>"><%= o.status %></span></td><td><span class="status <%= o.payment_status %>"><%= o.payment_status %></span></td></tr><% }) %>
+  </tbody>
+</table></div>

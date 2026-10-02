@@ -1,0 +1,24 @@
+<h1 style="margin-bottom:1rem"><%= title %></h1>
+<form class="card inline-form" method="post" action="/admin/<%= slug %>" style="max-width:520px;margin-bottom:1.25rem">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <label class="sr" for="new">New <%= label.toLowerCase() %></label>
+  <input id="new" name="title" placeholder="New <%= label.toLowerCase() %> name" required maxlength="100">
+  <button class="btn-primary">Add</button>
+</form>
+<div class="table-wrap" style="max-width:720px"><table>
+  <thead><tr><th><%= label %></th><th>Products</th><th></th></tr></thead>
+  <tbody>
+    <% if (!rows.length) { %><tr><td colspan="3" class="muted">None yet.</td></tr><% } %>
+    <% rows.forEach(t => { %>
+      <tr>
+        <td><form class="inline-form" method="post" action="/admin/<%= slug %>/<%= t.id %>">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <label class="sr" for="t<%= t.id %>">Name</label><input id="t<%= t.id %>" name="title" value="<%= t.title %>" required maxlength="100">
+          <button class="btn btn-sm">Save</button></form></td>
+        <td><%= t.n %></td>
+        <td class="right"><form method="post" action="/admin/<%= slug %>/<%= t.id %>/delete" onsubmit="return confirm('Delete <%= label.toLowerCase() %>? Its products will become uncategorised.')">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-sm btn-danger">Delete</button></form></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table></div>

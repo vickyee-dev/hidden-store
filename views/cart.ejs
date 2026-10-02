@@ -1,0 +1,39 @@
+<h1 style="margin-top:1.5rem">Your cart</h1>
+<% if (!cart.items.length) { %>
+  <div class="card center" style="margin-top:1rem"><p>Your cart is empty.</p><p style="margin-top:.75rem"><a class="btn btn-primary" href="/products">Browse shoes</a></p></div>
+<% } else { %>
+<div class="two-col">
+  <form method="post" action="/cart/update">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Item</th><th>Price</th><th>Qty</th><th class="right">Subtotal</th><th></th></tr></thead>
+        <tbody>
+        <% cart.items.forEach(({ product, qty, line, short }) => { %>
+          <tr>
+            <td><img class="thumb-sm" src="<%= product.image1 %>" alt=""></td>
+            <td><a href="/products/<%= product.id %>"><%= product.title %></a>
+              <% if (short) { %><div class="stock-out"><%= product.stock < 1 ? 'Out of stock' : 'Only ' + product.stock + ' available' %></div><% } %></td>
+            <td><%= money(product.price) %></td>
+            <td><label class="sr" for="q<%= product.id %>">Quantity for <%= product.title %></label>
+              <input class="qty" id="q<%= product.id %>" type="number" name="qty[<%= product.id %>]" value="<%= qty %>" min="0" max="10"></td>
+            <td class="right"><%= money(line) %></td>
+            <td><button class="btn-sm btn-danger" type="submit" formaction="/cart/remove" name="product_id" value="<%= product.id %>" aria-label="Remove <%= product.title %>">Remove</button></td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <p class="row" style="margin-top:.75rem"><button class="btn" type="submit">Update quantities</button><span class="muted small">Set a quantity to 0 to remove an item.</span></p>
+  </form>
+  <aside class="card summary">
+    <h2>Order summary</h2>
+    <div class="line"><span>Items</span><span><%= cart.count %></span></div>
+    <div class="line total"><span>Total</span><span><%= money(cart.total) %></span></div>
+    <p class="muted small">Delivery arranged after you order.</p>
+    <% if (cart.problems) { %><p class="stock-out">Adjust the highlighted items to continue.</p>
+    <% } else { %><a class="btn btn-primary btn-block" href="/checkout">Checkout</a><% } %>
+    <a class="btn btn-block" href="/products">Continue shopping</a>
+  </aside>
+</div>
+<% } %>

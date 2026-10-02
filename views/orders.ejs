@@ -1,0 +1,12 @@
+<h1 style="margin:1.5rem 0 1rem">My orders</h1>
+<% if (!orders.length) { %>
+  <div class="card center"><p>You haven’t placed any orders yet.</p><p style="margin-top:.75rem"><a class="btn btn-primary" href="/products">Start shopping</a></p></div>
+<% } else { %>
+<div class="table-wrap"><table>
+  <thead><tr><th>Invoice</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th>Payment</th></tr></thead>
+  <tbody><% orders.forEach(o => { %>
+    <tr><td><a href="/orders/<%= o.id %>"><%= o.invoice %></a></td><td><%= o.created_at.slice(0, 10) %></td><td><%= o.items %></td><td><%= money(o.total) %></td>
+      <td><span class="status <%= o.status %>"><%= o.status %></span></td><td><span class="status <%= o.payment_status %>"><%= o.payment_status %></span></td></tr>
+  <% }) %></tbody>
+</table></div>
+<% } %>

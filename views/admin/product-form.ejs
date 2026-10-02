@@ -1,0 +1,31 @@
+<% const isNew = !product.id; const action = isNew ? '/admin/products' : '/admin/products/' + product.id; %>
+<h1 style="margin-bottom:1rem"><%= isNew ? 'New product' : 'Edit product' %></h1>
+<% if (errors.length) { %><div class="errors" role="alert"><ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul></div><% } %>
+<form class="card stack" method="post" enctype="multipart/form-data" action="<%= action %>?_csrf=<%= csrfToken %>" style="max-width:720px">
+  <div class="field"><label for="title">Title</label><input id="title" name="title" value="<%= product.title || '' %>" required maxlength="150"></div>
+  <div class="field"><label for="description">Description</label><textarea id="description" name="description" rows="3" maxlength="1000"><%= product.description || '' %></textarea></div>
+  <div class="field"><label for="keywords">Search keywords <span class="hint">(space-separated)</span></label><input id="keywords" name="keywords" value="<%= product.keywords || '' %>" maxlength="255"></div>
+  <div class="grid-2">
+    <div class="field"><label for="category_id">Category</label>
+      <select id="category_id" name="category_id"><option value="">— None —</option>
+        <% categories.forEach(c => { %><option value="<%= c.id %>" <%= product.category_id === c.id ? 'selected' : '' %>><%= c.title %></option><% }) %></select></div>
+    <div class="field"><label for="brand_id">Brand</label>
+      <select id="brand_id" name="brand_id"><option value="">— None —</option>
+        <% brands.forEach(b => { %><option value="<%= b.id %>" <%= product.brand_id === b.id ? 'selected' : '' %>><%= b.title %></option><% }) %></select></div>
+  </div>
+  <div class="grid-2">
+    <div class="field"><label for="price">Price (KES)</label><input id="price" name="price" type="number" min="0" step="1" value="<%= product.price %>" required></div>
+    <div class="field"><label for="stock">Stock</label><input id="stock" name="stock" type="number" min="0" step="1" value="<%= product.stock %>" required></div>
+  </div>
+  <% [1, 2, 3].forEach(n => { const k = 'image' + n; %>
+    <div class="field">
+      <label for="<%= k %>">Image <%= n %> <span class="hint"><%= n === 1 ? (isNew ? '(required)' : '(main — leave empty to keep)') : '(optional)' %> · JPG, PNG, WebP, AVIF · max 3 MB</span></label>
+      <div class="preview-row">
+        <% if (product[k]) { %><img src="<%= product[k] %>" alt=""><% } %>
+        <input id="<%= k %>" type="file" name="<%= k %>" accept="image/jpeg,image/png,image/webp,image/avif,image/gif" style="width:auto" <%= isNew && n === 1 ? 'required' : '' %>>
+        <% if (!isNew && n > 1 && product[k]) { %><label class="small" style="margin:0"><input type="checkbox" name="remove_<%= k %>" value="1" style="width:auto"> Remove</label><% } %>
+      </div>
+    </div>
+  <% }) %>
+  <div class="row"><button class="btn-primary"><%= isNew ? 'Create product' : 'Save changes' %></button><a class="btn" href="/admin/products">Cancel</a></div>
+</form>

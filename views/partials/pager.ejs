@@ -1,0 +1,7 @@
+<% if (pages > 1) { const base = qs ? '/products?' + qs + '&' : '/products?'; %>
+<nav class="pager" aria-label="Pagination">
+  <% if (page > 1) { %><a href="<%= base %>page=<%= page - 1 %>">← Prev</a><% } %>
+  <% for (let i = 1; i <= pages; i++) { %><%- i === page ? `<span aria-current="page">${i}</span>` : `<a href="${base}page=${i}">${i}</a>` %><% } %>
+  <% if (page < pages) { %><a href="<%= base %>page=<%= page + 1 %>">Next →</a><% } %>
+</nav>
+<% } %>

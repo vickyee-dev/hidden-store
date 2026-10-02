@@ -1,0 +1,9 @@
+<h1 style="margin-bottom:1rem">Customers</h1>
+<div class="table-wrap"><table>
+  <thead><tr><th>Username</th><th>Email</th><th>Phone</th><th>Joined</th><th>Orders</th><th></th></tr></thead>
+  <tbody>
+    <% if (!users.length) { %><tr><td colspan="6" class="muted">No customers yet.</td></tr><% } %>
+    <% users.forEach(u => { %><tr><td><%= u.username %></td><td><%= u.email %></td><td><%= u.phone || '—' %></td><td><%= u.created_at.slice(0, 10) %></td><td><%= u.orders %></td>
+      <td class="right"><form method="post" action="/admin/users/<%= u.id %>/delete" onsubmit="return confirm('Delete this customer? Their orders are kept.')"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-sm btn-danger">Delete</button></form></td></tr><% }) %>
+  </tbody>
+</table></div>

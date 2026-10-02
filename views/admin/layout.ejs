@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title><%= title ? title + ' · ' : '' %>Admin · Hidden Store</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<% if (isAdmin) { %>
+<div class="admin-shell">
+  <nav class="admin-side" aria-label="Admin">
+    <a class="logo" href="/admin">Hidden<span>Store</span> <span class="small muted">admin</span></a>
+    <% [['/admin','Dashboard'],['/admin/products','Products'],['/admin/categories','Categories'],['/admin/brands','Brands'],['/admin/orders','Orders'],['/admin/users','Customers']].forEach(([href, label]) => {
+         const on = href === '/admin' ? currentPath === '/admin' : currentPath.startsWith(href); %>
+      <a href="<%= href %>" <%- on ? 'aria-current="page"' : '' %>><%= label %></a>
+    <% }) %>
+    <a href="/" target="_blank" rel="noopener">View shop ↗</a>
+    <form method="post" action="/admin/logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button>Log out</button></form>
+  </nav>
+  <main class="admin-main">
+    <% if (flash) { %><div class="flash <%= flash.type %>" role="status"><%= flash.msg %></div><% } %>
+    <%- body %>
+  </main>
+</div>
+<% } else { %>
+  <main class="container">
+    <% if (flash) { %><div class="flash <%= flash.type %>"><%= flash.msg %></div><% } %>
+    <%- body %>
+  </main>
+<% } %>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<div class="row spread" style="margin-top:1.5rem">
+  <div><h1>Hi, <%= user.username %></h1>
+    <p class="muted"><%= pending ? `You have ${pending} order${pending === 1 ? '' : 's'} in progress.` : 'No orders in progress.' %></p></div>
+  <form method="post" action="/logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn">Log out</button></form>
+</div>
+<div class="two-col">
+  <div class="stack">
+    <form class="card" method="post" action="/account">
+      <h2 style="margin-bottom:1rem">Profile</h2>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="field"><label>Email</label><input value="<%= user.email %>" disabled></div>
+      <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" value="<%= user.phone %>" inputmode="tel"></div>
+      <div class="field"><label for="address">Delivery address</label><input id="address" name="address" value="<%= user.address %>" maxlength="255"></div>
+      <button class="btn-primary" style="margin-top:1rem">Save profile</button>
+    </form>
+    <form class="card" method="post" action="/account/password">
+      <h2 style="margin-bottom:1rem">Change password</h2>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="field"><label for="cp">Current password</label><input id="cp" type="password" name="current_password" required autocomplete="current-password"></div>
+      <div class="field"><label for="np">New password <span class="hint">(8+ characters)</span></label><input id="np" type="password" name="new_password" required minlength="8" autocomplete="new-password"></div>
+      <button class="btn" style="margin-top:1rem">Change password</button>
+    </form>
+  </div>
+  <div class="stack">
+    <section class="card">
+      <div class="row spread"><h2>Recent orders</h2><a href="/orders">View all</a></div>
+      <% if (!recent.length) { %><p class="muted" style="margin-top:.5rem">Nothing yet.</p><% } %>
+      <% recent.forEach(o => { %><div class="row spread" style="padding:.6rem 0;border-bottom:1px solid var(--line)"><a href="/orders/<%= o.id %>"><%= o.invoice %></a><span><%= money(o.total) %> <span class="status <%= o.status %>"><%= o.status %></span></span></div><% }) %>
+    </section>
+    <form class="card" method="post" action="/account/delete" onsubmit="return confirm('Permanently delete your account?')">
+      <h3>Delete account</h3>
+      <p class="muted small" style="margin:.4rem 0 .8rem">This removes your login and profile. Past orders are kept for our records.</p>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label class="sr" for="dp">Password</label><input id="dp" type="password" name="password" placeholder="Confirm with your password" required autocomplete="current-password">
+      <button class="btn btn-danger" style="margin-top:.7rem">Delete my account</button>
+    </form>
+  </div>
+</div>

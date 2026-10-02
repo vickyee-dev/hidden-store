@@ -1,0 +1,22 @@
+<section class="hero">
+  <div>
+    <h1>Shoes for every step.</h1>
+    <p>Sneakers, formal shoes, boots and sandals from brands you know — delivered to your door, pay on delivery or with M-Pesa.</p>
+    <a class="btn btn-primary" href="/products">Shop all shoes</a>
+  </div>
+  <% if (featured[0]) { %><img src="<%= featured[0].image1 %>" alt="<%= featured[0].title %>"><% } %>
+</section>
+
+<section class="section">
+  <h2 style="margin-bottom:.75rem">Shop by category</h2>
+  <div class="chips">
+    <% categories.forEach(c => { %><a class="chip" href="/products?category=<%= c.id %>"><%= c.title %> (<%= c.n %>)</a><% }) %>
+  </div>
+</section>
+
+<section class="section">
+  <div class="row spread"><h2>New in</h2><a href="/products">View all →</a></div>
+  <div class="grid">
+    <% featured.forEach(p => { %><%- include('partials/product-card', { p, csrfToken, money }) %><% }) %>
+  </div>
+</section>

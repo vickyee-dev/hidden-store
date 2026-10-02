@@ -1,0 +1,15 @@
+<article class="product">
+  <a class="thumb" href="/products/<%= p.id %>" tabindex="-1" aria-hidden="true"><img src="<%= p.image1 %>" alt="" loading="lazy"></a>
+  <div class="body">
+    <% if (p.brand) { %><span class="tag"><%= p.brand %></span><% } %>
+    <h3><a href="/products/<%= p.id %>"><%= p.title %></a></h3>
+    <div class="price"><%= money(p.price) %></div>
+    <% if (p.stock < 1) { %><div class="stock-out">Out of stock</div>
+    <% } else if (p.stock <= 3) { %><div class="stock-low">Only <%= p.stock %> left</div><% } %>
+    <form method="post" action="/cart/add">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="product_id" value="<%= p.id %>">
+      <button class="btn-primary btn-block" <%= p.stock < 1 ? 'disabled' : '' %>>Add to cart</button>
+    </form>
+  </div>
+</article>

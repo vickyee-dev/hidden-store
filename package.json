@@ -1,0 +1,23 @@
+{
+  "name": "hidden-store",
+  "version": "2.0.0",
+  "description": "Hidden Store - a shoe e-commerce site (Express + SQLite + EJS)",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "ejs": "^6.0.1",
+    "express": "^4.22.3",
+    "express-session": "^1.19.0",
+    "multer": "^2.4.0"
+  }
+}

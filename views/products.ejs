@@ -1,0 +1,38 @@
+<%
+  const link = (o) => { const p = new URLSearchParams(); const v = { q, category, brand, sort: sort !== 'newest' ? sort : null, ...o };
+    for (const k in v) if (v[k] !== null && v[k] !== '' && v[k] !== undefined) p.set(k, v[k]); const s = p.toString(); return '/products' + (s ? '?' + s : ''); };
+%>
+<div class="layout">
+  <aside class="filters" aria-label="Filters">
+    <h3>Category</h3>
+    <a href="<%= link({ category: null }) %>" class="<%= category === null ? 'active' : '' %>">All</a>
+    <% categories.forEach(c => { %><a href="<%= link({ category: c.id }) %>" class="<%= category === c.id ? 'active' : '' %>"><%= c.title %></a><% }) %>
+    <h3>Brand</h3>
+    <a href="<%= link({ brand: null }) %>" class="<%= brand === null ? 'active' : '' %>">All</a>
+    <% brands.forEach(b => { %><a href="<%= link({ brand: b.id }) %>" class="<%= brand === b.id ? 'active' : '' %>"><%= b.title %></a><% }) %>
+  </aside>
+  <section>
+    <div class="row spread" style="margin-bottom:1rem">
+      <div>
+        <h1><%= q ? 'Results for “' + q + '”' : 'Shoes' %></h1>
+        <p class="muted small"><%= total %> item<%= total === 1 ? '' : 's' %></p>
+      </div>
+      <form method="get" action="/products" class="row">
+        <% if (q) { %><input type="hidden" name="q" value="<%= q %>"><% } %>
+        <% if (category !== null) { %><input type="hidden" name="category" value="<%= category %>"><% } %>
+        <% if (brand !== null) { %><input type="hidden" name="brand" value="<%= brand %>"><% } %>
+        <label class="sr" for="sort">Sort by</label>
+        <select id="sort" name="sort" onchange="this.form.submit()" style="width:auto">
+          <% Object.entries(sorts).forEach(([k, [label]]) => { %><option value="<%= k %>" <%= sort === k ? 'selected' : '' %>><%= label %></option><% }) %>
+        </select>
+        <noscript><button class="btn">Apply</button></noscript>
+      </form>
+    </div>
+    <% if (!products.length) { %>
+      <div class="card center"><p>No shoes match that search.</p><p style="margin-top:.75rem"><a class="btn" href="/products">Clear filters</a></p></div>
+    <% } else { %>
+      <div class="grid"><% products.forEach(p => { %><%- include('partials/product-card', { p, csrfToken, money }) %><% }) %></div>
+      <%- include('partials/pager', { page, pages, qs }) %>
+    <% } %>
+  </section>
+</div>

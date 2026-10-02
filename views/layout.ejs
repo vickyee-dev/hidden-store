@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title ? title + ' · ' : '' %>Hidden Store</title>
+  <meta name="description" content="Hidden Store — sneakers, formal shoes, boots and sandals, delivered across Kenya.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23c2410c'/%3E%3Ctext x='16' y='22' font-size='18' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EH%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href="/">Hidden<span>Store</span></a>
+      <nav class="nav" aria-label="Main">
+        <a href="/products" <%- currentPath.startsWith('/products') ? 'aria-current="page"' : '' %>>Shop</a>
+        <% if (user) { %>
+          <a href="/orders">Orders</a>
+          <a href="/account">Account</a>
+        <% } else { %>
+          <a href="/login">Log in</a>
+          <a href="/register">Register</a>
+        <% } %>
+        <a class="cart-link" href="/cart">Cart<% if (cartCount) { %><span class="badge-count"><%= cartCount %></span><% } %></a>
+      </nav>
+      <form class="search" action="/products" method="get" role="search">
+        <label class="sr" for="q">Search shoes</label>
+        <input id="q" type="search" name="q" placeholder="Search shoes…" maxlength="80">
+        <button class="btn-primary" type="submit">Search</button>
+      </form>
+    </div>
+  </header>
+  <main class="container">
+    <% if (flash) { %><div class="flash <%= flash.type %>" role="status"><%= flash.msg %></div><% } %>
+    <%- body %>
+  </main>
+  <footer class="site-footer">
+    <div class="container row spread">
+      <span>© <%= new Date().getFullYear() %> Hidden Store · Prices in Kenyan shillings (KES)</span>
+      <span>Pay on delivery or M-Pesa</span>
+    </div>
+  </footer>
+</body>
+</html>

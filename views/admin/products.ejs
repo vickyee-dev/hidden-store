@@ -1,0 +1,25 @@
+<div class="row spread" style="margin-bottom:1rem">
+  <h1>Products</h1>
+  <div class="row">
+    <form method="get" class="inline-form"><label class="sr" for="q">Search</label><input id="q" name="q" value="<%= q %>" placeholder="Search products"><button class="btn">Search</button></form>
+    <a class="btn btn-primary" href="/admin/products/new">+ New product</a>
+  </div>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th></th><th>Title</th><th>Category</th><th>Brand</th><th>Price</th><th>Stock</th><th></th></tr></thead>
+  <tbody>
+    <% if (!products.length) { %><tr><td colspan="7" class="muted">No products found.</td></tr><% } %>
+    <% products.forEach(p => { %>
+      <tr>
+        <td><img class="thumb-sm" src="<%= p.image1 %>" alt=""></td>
+        <td><a href="/admin/products/<%= p.id %>/edit"><%= p.title %></a></td>
+        <td><%= p.category || '—' %></td><td><%= p.brand || '—' %></td><td><%= money(p.price) %></td>
+        <td><span class="<%= p.stock < 1 ? 'stock-out' : p.stock <= 3 ? 'stock-low' : '' %>"><%= p.stock %></span></td>
+        <td class="right row" style="justify-content:flex-end">
+          <a class="btn btn-sm" href="/admin/products/<%= p.id %>/edit">Edit</a>
+          <form method="post" action="/admin/products/<%= p.id %>/delete" onsubmit="return confirm('Delete this product?')"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-sm btn-danger">Delete</button></form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table></div>

@@ -1,0 +1,10 @@
+<form class="card form-card" method="post" action="/login">
+  <h1 style="margin-bottom:1rem">Log in</h1>
+  <% if (error) { %><div class="errors" role="alert"><%= error %></div><% } %>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <input type="hidden" name="next" value="<%= next %>">
+  <div class="field"><label for="email">Email</label><input id="email" type="email" name="email" required autocomplete="email" autofocus></div>
+  <div class="field"><label for="password">Password</label><input id="password" type="password" name="password" required autocomplete="current-password"></div>
+  <button class="btn-primary btn-block" style="margin-top:1.1rem">Log in</button>
+  <p class="muted small center" style="margin-top:1rem">New here? <a href="/register">Create an account</a></p>
+</form>

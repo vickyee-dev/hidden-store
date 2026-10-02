@@ -1,0 +1,28 @@
+<h1>Dashboard</h1>
+<div class="stats">
+  <div class="card stat"><div class="n"><%= money(stats.revenue) %></div><div class="l">Paid revenue</div></div>
+  <div class="card stat"><div class="n"><%= stats.orders %></div><div class="l">Orders (<%= stats.pending %> pending)</div></div>
+  <div class="card stat"><div class="n"><%= stats.products %></div><div class="l">Products</div></div>
+  <div class="card stat"><div class="n"><%= stats.users %></div><div class="l">Customers</div></div>
+</div>
+<div class="two-col" style="grid-template-columns:1.4fr 1fr">
+  <section>
+    <div class="row spread" style="margin-bottom:.6rem"><h2>Recent orders</h2><a href="/admin/orders">All orders</a></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Invoice</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+      <tbody>
+        <% if (!recent.length) { %><tr><td colspan="4" class="muted">No orders yet.</td></tr><% } %>
+        <% recent.forEach(o => { %><tr><td><a href="/admin/orders/<%= o.id %>"><%= o.invoice %></a></td><td><%= o.username || o.ship_name %></td><td><%= money(o.total) %></td><td><span class="status <%= o.status %>"><%= o.status %></span></td></tr><% }) %>
+      </tbody>
+    </table></div>
+  </section>
+  <section>
+    <h2 style="margin-bottom:.6rem">Low stock</h2>
+    <div class="table-wrap"><table>
+      <tbody>
+        <% if (!low.length) { %><tr><td class="muted">Everything is well stocked.</td></tr><% } %>
+        <% low.forEach(p => { %><tr><td><a href="/admin/products/<%= p.id %>/edit"><%= p.title %></a></td><td class="right"><span class="<%= p.stock ? 'stock-low' : 'stock-out' %>"><%= p.stock %> left</span></td></tr><% }) %>
+      </tbody>
+    </table></div>
+  </section>
+</div>

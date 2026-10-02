@@ -1,0 +1,15 @@
+<form class="card form-card" method="post" action="/register">
+  <h1 style="margin-bottom:1rem">Create account</h1>
+  <% if (errors.length) { %><div class="errors" role="alert"><ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul></div><% } %>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <div class="field"><label for="username">Username</label><input id="username" name="username" value="<%= form.username || '' %>" required minlength="3" maxlength="30" autocomplete="username"></div>
+  <div class="field"><label for="email">Email</label><input id="email" type="email" name="email" value="<%= form.email || '' %>" required autocomplete="email"></div>
+  <div class="field"><label for="phone">Phone <span class="hint">(optional)</span></label><input id="phone" name="phone" value="<%= form.phone || '' %>" inputmode="tel" placeholder="0712345678"></div>
+  <div class="field"><label for="address">Delivery address <span class="hint">(optional)</span></label><input id="address" name="address" value="<%= form.address || '' %>" maxlength="255"></div>
+  <div class="grid-2 field">
+    <div><label for="password">Password</label><input id="password" type="password" name="password" required minlength="8" autocomplete="new-password"></div>
+    <div><label for="confirm">Confirm</label><input id="confirm" type="password" name="confirm" required minlength="8" autocomplete="new-password"></div>
+  </div>
+  <button class="btn-primary btn-block" style="margin-top:1.1rem">Create account</button>
+  <p class="muted small center" style="margin-top:1rem">Already registered? <a href="/login">Log in</a></p>
+</form>
