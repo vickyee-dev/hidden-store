@@ -108,6 +108,28 @@ pending → cancelled
 
 ---
 
+## Screenshots
+
+### Landing Page
+
+![Hidden Store Landing Page](hero.png)
+
+### Store Interface
+
+![Hidden Store](image.png)
+
+### Product View
+
+![Hidden Store Product View](image1.png)
+
+### Shopping Experience
+
+![Hidden Store Shopping Experience](image2.png)
+
+### Additional View
+
+![Hidden Store](image3.png)
+
 ## 🧪 Testing
 
 The project includes end-to-end tests that boot the real application against an in-memory database and exercise it over HTTP.
